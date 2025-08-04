@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grow a Garden Pet Index</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    /* Keyframe animation for the glowing pulse effect on tags */
+    @keyframes glow-pulse-red {
+      0%, 100% {
+        box-shadow: 0 0 2px 1px transparent;
+      }
+      50% {
+        box-shadow: 0 0 5px 2px #ef4444;
+      }
+    }
+
+    @keyframes glow-pulse-green {
+      0%, 100% {
+        box-shadow: 0 0 2px 1px transparent;
+      }
+      50% {
+        box-shadow: 0 0 5px 2px #22c55e;
+      }
+    }
+    
+    @keyframes glow-pulse-purple {
+      0%, 100% {
+        box-shadow: 0 0 2px 1px transparent;
+      }
+      50% {
+        box-shadow: 0 0 5px 2px #a855f7;
+      }
+    }
+
+    /* Keyframe animation for the pulsating white card highlight */
+    @keyframes card-highlight-pulse {
+      0%, 100% {
+        box-shadow: 0 0 0px transparent;
+      }
+      50% {
+        box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.4);
+      }
+    }
+    
+    /* Red glow for unobtainable tags */
+    .glow-red {
+      animation: glow-pulse-red 2s infinite;
+    }
+    
+    /* Green glow for obtainable tags */
+    .glow-green {
+      animation: glow-pulse-green 2s infinite;
+    }
+    
+    /* Purple glow for popular tags */
+    .glow-purple {
+      animation: glow-pulse-purple 2s infinite;
+    }
+    
+    /* Class for the popular card highlight effect */
+    .popular-card-highlight {
+      animation: card-highlight-pulse 3s infinite;
+    }
+    
+    /* Style for the card texture with the gradient */
+    .card-texture {
+        background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(76, 29, 149, 0.9)), url('');
+        background-size: cover;
+        background-position: center;
+        background-blend-mode: multiply;
+    }
+    
+    /* Custom styles for the feedback button container and tooltip */
+    .feedback-button-container {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 100;
+    }
+
+    .tooltip {
+        position: absolute;
+        bottom: calc(100% + 0.5rem);
+        right: 0;
+        padding: 0.5rem;
+        background-color: #4b5563; /* Tailwind gray-700 */
+        color: white;
+        border-radius: 0.5rem; /* Tailwind rounded-lg */
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+    }
+    
+    .feedback-button-container:hover .tooltip {
+        opacity: 1;
+        pointer-events: auto;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 min-h-screen text-gray-100 p-6 md:p-12">
+  <div class="max-w-4xl mx-auto">
+    <!-- Title and Header section -->
+    <h1 class="text-3xl font-bold text-center mb-8">Grow A Garden Values</h1>
+    <header class="mb-8 md:mb-12">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+        <div class="md:col-span-2">
+          <div class="relative">
+            <input
+              type="text"
+              id="search-input"
+              placeholder="Search for an item..."
+              class="w-full bg-gray-800 text-white px-5 py-3 rounded-xl border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-600 transition-colors pl-12"
+            />
+            <svg class="h-6 w-6 absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+        </div>
+        <div class="flex space-x-4 md:col-span-2">
+          <div class="relative w-full">
+            <select
+              id="tier-filter"
+              class="appearance-none w-full bg-gray-800 text-white px-5 py-3 rounded-xl border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-600 transition-colors"
+            >
+              <option value="All Tiers">All Tiers</option>
+              <option value="Common">Common</option>
+              <option value="Uncommon">Uncommon</option>
+              <option value="Rare">Rare</option>
+              <option value="Legendary">Legendary</option>
+              <option value="Mythical">Mythical</option>
+              <option value="Divine">Divine</option>
+              <option value="Prismatic">Prismatic</option>
+            </select>
+            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+              <svg class="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+          <div class="relative w-full">
+            <select
+              id="sort-by"
+              class="appearance-none w-full bg-gray-800 text-white px-5 py-3 rounded-xl border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-600 transition-colors"
+            >
+              <option value="popular">Sort By: Popular</option>
+              <option value="highest-value">Sort By: Highest Value</option>
+              <option value="lowest-value">Sort By: Lowest Value</option>
+            </select>
+            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+              <svg class="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main id="pet-cards-container">
+      <!-- Pet cards will be rendered here by JavaScript -->
+    </main>
+  </div>
+
+  <!-- Feedback button and tooltip container -->
+  <div class="feedback-button-container group">
+    <!-- The custom tooltip that appears on hover -->
+    <div class="tooltip">Values are Off? Let us know!</div>
+    <button id="feedback-button" class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center text-white text-xl font-bold hover:bg-purple-700 transition-colors shadow-lg">
+      !
+    </button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // A helper function to parse the value string into a numerical value for sorting.
+      // It handles 'Q' for quadrillions and 'T' for trillions.
+      const parseValue = (valueString) => {
+        if (!valueString) return 0;
+        const parts = valueString.match(/(\d+)/g);
+        if (!parts) return 0;
+        const numericValue = parseFloat(parts[0], 10);
+        const unit = valueString.toUpperCase().slice(-1);
+
+        if (unit === 'Q') {
+          return numericValue * 1e15; // Quadrillion
+        } else if (unit === 'T') {
+          return numericValue * 1e12; // Trillion
+        }
+        return numericValue;
+      };
+
+      const petsData = [
+        { name: 'Corrupted Kitsune', value: '1Q - 2Q', image: 'Images/CorruptedKitsune.png', type: 'UNOBTAINABLE', isPopular: false, rarity: 'Prismatic' },
+        { name: 'Kitsune', value: '25Q - 35Q', image: 'Images/Kitsune.png', type: 'UNOBTAINABLE', isPopular: false, huge: '200Q - 600Q', rarity: 'Prismatic' },
+        { name: 'Spinosaurus', value: '4Q - 5Q', image: 'Images/Spinosaurus.png', type: 'UNOBTAINABLE', isPopular: false, rarity: 'Divine' },
+        { name: 'T-rex', value: '3Q - 4Q', image: 'Images/T-Rex.png', type: 'UNOBTAINABLE', isPopular: true, rarity: 'Divine' },
+        { name: 'Mimic Octopus', value: '2Q - 4Q', image: 'Images/MimicOctopus.png', type: 'OBTAINABLE', isPopular: false, rarity: 'Mythical' },
+        { name: 'Butterfly', value: '9Q - 10Q', image: 'Images/Butterfly.png', type: 'OBTAINABLE', isPopular: true, rarity: 'Mythical' },
+        { name: 'Disco Bee', value: '9Q - 12Q', image: 'Images/DiscoBee.gif', type: 'OBTAINABLE', isPopular: true, rarity: 'Divine' },
+        { name: 'Dragonfly', value: '7Q - 8.5Q', image: 'Images/Dragonfly.png', type: 'OBTAINABLE', isPopular: true, rarity: 'Divine' },
+        { name: 'Queen Bee', value: '2Q - 3Q', image: 'Images/Queen_bee.png', type: 'OBTAINABLE', isPopular: false, rarity: 'Divine' },
+        { name: 'Blood Hedgehog', value: '400T - 500T', image: 'Images/Blood_Hedgehog.png', type: 'UNOBTAINABLE', isPopular: false, rarity: 'Legendary' },
+        { name: 'Raccoon', value: '8Q - 9Q', image: 'Images/raccoon.png', type: 'UNOBTAINABLE', isPopular: true, rarity: 'Divine' },
+        { name: 'Fennec Fox', value: '7Q - 9Q', image: 'Images/fennec_fox.png', type: 'UNOBTAINABLE', isPopular: false, rarity: 'Divine' },
+        { name: 'Sushi Bear', value: '1Q', image: 'Images/sushi_bear.png', type: 'OBTAINABLE', isPopular: false, rarity: 'Legendary' },
+        { name: 'Cooked Owl', value: '350T-400T', image: 'Images/cooked_owl.png', type: 'UNOBTAINABLE', isPopular: false, rarity: 'Mythical' },
+        { name: 'Raiju', value: '500T-1Q', image: 'Images/raiju.png', type: 'UNOBTAINABLE', isPopular: false, rarity: 'Divine' },
+        { name: 'Scarlet Macaw', value: '100T-150T', image: 'Images/scarlet_macaw.png', type: 'OBTAINABLE', isPopular: false, rarity: 'Legendary' },
+        { name: 'Moon Cat', value: '500T-600T', image: 'Images/moon_cat.png', type: 'UNOBTAINABLE', isPopular: true, rarity: 'Legendary' },
+        { name: 'Red Fox', value: '1Q-2Q', image: 'Images/red_fox.png', type: 'OBTAINABLE', isPopular: false, rarity: 'Divine' },
+        { name: 'Chicken Zombie', value: '2Q-3QT', image: 'Images/chicken_zombie.png', type: 'UNOBTAINABLE', isPopular: true, rarity: 'Mythical' },
+      ];
+
+      const searchInput = document.getElementById('search-input');
+      const tierFilter = document.getElementById('tier-filter');
+      const sortBy = document.getElementById('sort-by');
+      const container = document.getElementById('pet-cards-container');
+
+      const renderPets = (pets) => {
+        if (pets.length === 0) {
+          container.innerHTML = `
+            <div class="text-center text-gray-500 text-lg mt-16">
+              No pets found.
+            </div>
+          `;
+          return;
+        }
+
+        const petCardsHTML = pets.map(pet => {
+          const typeTag = pet.type === 'UNOBTAINABLE'
+            ? `<span class="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full uppercase glow-red">${pet.type}</span>`
+            : `<span class="bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-full uppercase glow-green">${pet.type}</span>`;
+          
+          const popularTag = pet.isPopular
+            ? `<span class="bg-purple-500 text-white text-xs font-bold px-2 py-1 rounded-full uppercase glow-purple">POPULAR</span>`
+            : '';
+
+          return `
+            <div class="flex flex-col bg-purple-900 rounded-2xl shadow-xl p-4 transition-transform transform hover:scale-105 ${pet.isPopular ? 'popular-card-highlight' : ''} card-texture">
+              <div class="flex justify-center items-start mb-2 space-x-2">
+                ${typeTag}
+                ${popularTag}
+              </div>
+              <div class="flex flex-col items-center">
+                <div class="w-24 h-24 bg-purple-800 rounded-full flex items-center justify-center mb-4 p-2">
+                  <img src="${pet.image}" alt="${pet.name}" class="w-20 h-20 rounded-full object-contain" />
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2 text-center">${pet.name}</h3>
+                <p class="text-sm text-gray-300 font-semibold text-center">Value: ${pet.value}</p>
+                <div class="w-full mt-4 text-center text-sm text-gray-400 border-t border-purple-800 pt-4">
+                  <p class="mt-2 text-xs">Rarity: ${pet.rarity}</p>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        container.innerHTML = `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">${petCardsHTML}</div>`;
+      };
+
+      const updateDisplay = () => {
+        let currentPets = petsData.slice();
+
+        // Filter by search query
+        const searchQuery = searchInput.value.toLowerCase();
+        currentPets = currentPets.filter(pet =>
+          pet.name.toLowerCase().includes(searchQuery)
+        );
+
+        // Filter by tier
+        const selectedTier = tierFilter.value;
+        if (selectedTier !== 'All Tiers') {
+          currentPets = currentPets.filter(pet => pet.rarity === selectedTier);
+        }
+
+        // Sort pets
+        const sortType = sortBy.value;
+        if (sortType === 'popular') {
+          currentPets.sort((a, b) => {
+            if (a.isPopular && !b.isPopular) return -1;
+            if (!a.isPopular && b.isPopular) return 1;
+            return 0;
+          });
+        } else if (sortType === 'highest-value') {
+          currentPets.sort((a, b) => {
+            const aValue = parseValue(a.value);
+            const bValue = parseValue(b.value);
+            return bValue - aValue;
+          });
+        } else if (sortType === 'lowest-value') {
+          currentPets.sort((a, b) => {
+            const aValue = parseValue(a.value);
+            const bValue = parseValue(b.value);
+            return aValue - bValue;
+          });
+        }
+
+        renderPets(currentPets);
+      };
+
+      // Attach event listeners
+      searchInput.addEventListener('input', updateDisplay);
+      tierFilter.addEventListener('change', updateDisplay);
+      sortBy.addEventListener('change', updateDisplay);
+
+      // Initial render
+      updateDisplay();
+    });
+  </script>
+</body>
+</html>
